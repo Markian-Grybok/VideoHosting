@@ -1,6 +1,7 @@
 <Solution>
   <Folder Name="/Backend/" />
   <Folder Name="/Backend/Services/">
+    <Project Path="Backend/Services/ApiGateway/ApiGateway.csproj" />
     <Project Path="Backend/Services/ContentService.API/ContentService.API.csproj" />
     <Project Path="Backend/Services/FileService/FileService.csproj" />
   </Folder>
