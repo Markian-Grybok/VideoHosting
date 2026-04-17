@@ -1,0 +1,4 @@
+namespace FileService.Features.Upload.Commands
+{
+    // Empty for now
+}

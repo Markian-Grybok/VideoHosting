@@ -1,0 +1,4 @@
+namespace FileService.Features.Streaming.Queries
+{
+    // Empty for now
+}

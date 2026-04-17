@@ -1,0 +1,4 @@
+namespace FileService.Features.Processing.Hubs
+{
+    // Empty for now
+}

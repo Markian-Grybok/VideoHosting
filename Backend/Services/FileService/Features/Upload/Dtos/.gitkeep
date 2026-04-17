@@ -1,0 +1,4 @@
+namespace FileService.Features.Upload.Dtos
+{
+    // Empty for now
+}

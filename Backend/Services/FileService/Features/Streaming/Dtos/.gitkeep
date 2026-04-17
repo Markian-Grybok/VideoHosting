@@ -1,0 +1,4 @@
+namespace FileService.Features.Streaming.Dtos
+{
+    // Empty for now
+}

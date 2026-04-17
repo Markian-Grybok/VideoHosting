@@ -1,0 +1,61 @@
+using MediatR;
+using Microsoft.AspNetCore.Mvc;
+using FileService.Features.Streaming.Queries;
+using FileService.Features.Streaming.Dtos;
+
+namespace FileService.Features.Streaming
+{
+    [ApiController]
+    [Route("api/files")]
+    public class StreamingController : ControllerBase
+    {
+        private readonly IMediator _mediator;
+
+        public StreamingController(IMediator mediator)
+        {
+            _mediator = mediator;
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> GetFileList(
+            [FromQuery] int page = 1,
+            [FromQuery] int pageSize = 20,
+            CancellationToken ct = default)
+        {
+            var query = new GetFileListQuery(page, pageSize);
+            var result = await _mediator.Send(query, ct);
+            return Ok(result);
+        }
+
+        [HttpGet("{fileId}")]
+        public async Task<IActionResult> GetFileStatus(Guid fileId, CancellationToken ct = default)
+        {
+            var query = new GetFileStatusQuery(fileId);
+            var result = await _mediator.Send(query, ct);
+            
+            if (result == null)
+                return NotFound();
+            
+            return Ok(result);
+        }
+
+        [HttpGet("{fileId}/play")]
+        public async Task<IActionResult> GetPlaybackUrl(Guid fileId, CancellationToken ct = default)
+        {
+            try
+            {
+                var query = new GetPlaybackUrlQuery(fileId);
+                var result = await _mediator.Send(query, ct);
+                return Ok(result);
+            }
+            catch (KeyNotFoundException ex)
+            {
+                return NotFound(new { message = ex.Message });
+            }
+            catch (InvalidOperationException ex)
+            {
+                return BadRequest(new { message = ex.Message });
+            }
+        }
+    }
+}
