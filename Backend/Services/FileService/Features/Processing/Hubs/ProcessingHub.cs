@@ -7,7 +7,7 @@ namespace FileService.Features.Processing.Hubs
     /// Client event: "ProcessingUpdate"
     /// Payload: { fileId: string, status: "Processing" | "Ready" | "Failed", progressPercent: number }
     /// </summary>
-    [Authorize(AuthenticationSchemes = "Bearer")] // remove this line if no auth
+    // [Authorize(AuthenticationSchemes = "Bearer")] // remove this line if no auth
     public class ProcessingHub : Hub
     {
         public async Task SubscribeToFile(string fileId)

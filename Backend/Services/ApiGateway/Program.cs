@@ -1,6 +1,23 @@
+using Microsoft.AspNetCore.Http.Features;
 using Yarp.ReverseProxy;
 
 var builder = WebApplication.CreateBuilder(args);
+
+// ========= ДОДАТИ ЦЕ ПЕРЕД ВСІМ =========
+builder.WebHost.ConfigureKestrel(options =>
+{
+    options.Limits.MaxRequestBodySize = 524_288_000; // 500 MB
+    options.Limits.KeepAliveTimeout = TimeSpan.FromMinutes(10);
+    options.Limits.RequestHeadersTimeout = TimeSpan.FromMinutes(10);
+});
+
+builder.Services.Configure<FormOptions>(options =>
+{
+    options.ValueLengthLimit = int.MaxValue;
+    options.MultipartBodyLengthLimit = 524_288_000;
+    options.MemoryBufferThreshold = int.MaxValue;
+});
+// ========================================
 
 // 1. YARP
 builder.Services.AddReverseProxy()
@@ -16,7 +33,7 @@ builder.Services.AddCors(options =>
         .WithOrigins(allowedOrigins)
         .AllowAnyHeader()
         .AllowAnyMethod()
-        .AllowCredentials()));  // required for SignalR
+        .AllowCredentials()));
 
 // 3. Health Checks
 builder.Services.AddHealthChecks();
@@ -34,9 +51,9 @@ app.MapGet("/gateway/routes", (IProxyStateLookup proxy) =>
 {
     var routes = proxy.GetRoutes().Select(r => new
     {
-        RouteId  = r.Config.RouteId,
-        Path     = r.Config.Match.Path,
-        Cluster  = r.Config.ClusterId
+        RouteId = r.Config.RouteId,
+        Path = r.Config.Match.Path,
+        Cluster = r.Config.ClusterId
     });
     return Results.Ok(routes);
 });
